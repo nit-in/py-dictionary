@@ -8,12 +8,11 @@ class Dictionary:
     def __init__(self, word, max_results=5):
         self.word = word
         self.max_results = max_results
-        self.color = "white"
         self.url = "https://www.dictionary.com/browse/" + str(self.word)
         self.response = requests.get(self.url).content
         self.soup = bs(self.response, "html.parser")
 
-    def meaning(self, color):
+    def meaning(self, color="white"):
         self.color = color
         # for the meaning part
         meanings = self.soup.find_all("div", attrs={"value": True})
@@ -26,7 +25,7 @@ class Dictionary:
         except IndexError:
             pass
 
-    def synonyms(self, color):
+    def synonyms(self, color="white"):
         # for synonyms
         self.color = color
         print("\nsynonyms of the word:")
@@ -41,7 +40,7 @@ class Dictionary:
             except IndexError:
                 pass
 
-    def antonyms(self, color):
+    def antonyms(self, color="white"):
         self.color = color
         print("\nantonyms of the word:")
         antonyms_divs = self.soup.find_all("div", {"id": "antonyms"})
