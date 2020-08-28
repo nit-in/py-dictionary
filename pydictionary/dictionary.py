@@ -4,19 +4,24 @@ from bs4 import BeautifulSoup as bs
 
 
 class Dictionary:
-    def __init__(self, word):
+    def __init__(self, word, max_results=5):
         self.word = word
+        self.max_results = max_results
         self.url = "https://www.dictionary.com/browse/" + str(self.word)
         self.response = requests.get(self.url).content
         self.soup = bs(self.response, "html.parser")
-        # print(self.soup)
 
     def meaning(self):
         # for the meaning part
         meanings = self.soup.find_all("div", attrs={"value": True})
         print("\nMeaning of the word:")
-        for meaning in meanings:
-            print(f"{int ( meanings.index ( meaning ) ) + 1}. {str ( meaning.text )}")
+        meaning_list = self.soup_to_list(meanings)
+        try:
+            for i in range(0, self.max_results):
+                meaning = self.result_string(i, meaning_list[i])
+                print(meaning)
+        except IndexError:
+            pass
 
     def synonyms(self):
         # for synonyms
@@ -24,17 +29,36 @@ class Dictionary:
         synonyms_divs = self.soup.find_all("div", {"id": "synonyms"})
         for synonyms_anchors in synonyms_divs:
             synonyms_anchors = synonyms_anchors.find_all("a", class_="luna-xref")
-            for synonyms in synonyms_anchors:
-                print(
-                    f"{int ( synonyms_anchors.index ( synonyms ) ) + 1}. {str ( synonyms.text )}"
-                )
+            synonyms_list = self.soup_to_list(synonyms_anchors)
+            try:
+                for i in range(0, self.max_results):
+                    synonym = self.result_string(i, synonyms_list[i])
+                    print(synonym)
+            except IndexError:
+                pass
 
     def antonyms(self):
         print("\nantonyms of the word:")
         antonyms_divs = self.soup.find_all("div", {"id": "antonyms"})
         for antonyms_anchors in antonyms_divs:
             antonyms_anchors = antonyms_anchors.find_all("a", class_="luna-xref")
-            for antonyms in antonyms_anchors:
-                print(
-                    f"{int ( antonyms_anchors.index ( antonyms ) ) + 1}. {str ( antonyms.text )}"
-                )
+            antonyms_list = self.soup_to_list(antonyms_anchors)
+            try:
+                for i in range(0, self.max_results):
+                    antonym = self.result_string(i, antonyms_list[i])
+                    print(antonym)
+            except IndexError:
+                pass
+
+    def soup_to_list(self, soup_result):
+        soup_list = []
+        self.soup_result = soup_result
+        for i in soup_result:
+            soup_list.append(i.text)
+        return soup_list
+
+    def result_string(self, index, string):
+        self.index = index
+        self.string = string
+        result = f"{int(self.index)+ 1}. {str(self.string)}"
+        return result
