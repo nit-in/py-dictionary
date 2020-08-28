@@ -5,6 +5,6 @@ if __name__ == "__main__":
     while True:
         term = input("\nEnter the word to search:\t")
         dict = Dictionary(str(term), max_results=5)
-        dict.meaning()
-        dict.synonyms()
-        dict.antonyms()
+        dict.meaning(color="red")
+        dict.synonyms(color="blue")
+        dict.antonyms(color="green")
