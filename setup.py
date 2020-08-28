@@ -17,5 +17,5 @@ setuptools.setup(
         "Programming Language :: Python :: 3",
         "Operating System :: OS Independent",
     ],
-    install_requires=["requests", "bs4", "stringcolor",],
+    install_requires=["requests", "bs4", "string-color",],
 )
