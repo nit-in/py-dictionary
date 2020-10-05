@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="Py-Dictionary",
-    version="2.0.0",
+    version="3.0.0",
     author="nit-in",
     author_email="nit_in@live.com",
     description="Dictionary module",

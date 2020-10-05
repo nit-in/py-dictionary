@@ -2,7 +2,7 @@
 import requests
 from bs4 import BeautifulSoup as bs
 from stringcolor import *
-
+import re
 
 class Dictionary:
     def __init__(self, word, max_results=5):
@@ -12,6 +12,8 @@ class Dictionary:
         self.thesaurus_url = "https://www.thesaurus.com/browse/" + str(self.word)
         self.meaning_soup = self.soup_result(self.meaning_url)
         self.thesaurus_soup = self.soup_result(self.thesaurus_url)
+        self.json_data = self.thesaurus_soup.find('script', text=re.compile("searchData"))
+        self.regex = re.compile(r"\"targetTerm\":\"([a-zA-Z0-9_ ]+)\"")
 
     def meaning(self, color="white"):
         self.color = color
@@ -31,31 +33,28 @@ class Dictionary:
         self.color = color
         print("\nsynonyms of the word:")
         #synonyms_divs = self.soup.find_all("div", {"id": "synonyms"})
-        synonyms_divs = self.thesaurus_soup.find_all("ul",class_="css-1fvorj3 et6tpn80")
-        for synonyms_anchors in synonyms_divs:
-            synonyms_anchors = synonyms_anchors.find_all("a")
-            synonyms_list = self.soup_to_list(synonyms_anchors)
-            try:
-                for i in range(0, self.max_results):
-                    synonym = self.result_string(i, synonyms_list[i])
-                    print(cs(synonym, self.color))
-            except IndexError:
-                pass
+        synonyms_data = str(self.json_data)[str(self.json_data).find("searchData"):str(self.json_data).find('"antonyms"')]
+        synonyms_list = re.findall(self.regex, synonyms_data)
+        try:
+            for i in range(0, self.max_results):
+                synonym = self.result_string(i, synonyms_list[i])
+                print(cs(synonym, self.color))
+        except IndexError:
+            pass
 
     def antonyms(self, color="white"):
         self.color = color
         print("\nantonyms of the word:")
         #antonyms_divs = self.soup.find_all("div", {"id": "antonyms"})
-        antonyms_divs = self.thesaurus_soup.find_all("ul",class_="css-1ujn9vh et6tpn80")
-        for antonyms_anchors in antonyms_divs:
-            antonyms_anchors = antonyms_anchors.find_all("a")
-            antonyms_list = self.soup_to_list(antonyms_anchors)
-            try:
-                for i in range(0, self.max_results):
-                    antonym = self.result_string(i, antonyms_list[i])
-                    print(cs(antonym, self.color))
-            except IndexError:
-                pass
+        antonyms_data = str(self.json_data)[str(self.json_data).find('"antonyms"'):]
+        antonyms_data = antonyms_data[:antonyms_data.find('"synonyms"')]
+        antonyms_list = re.findall(self.regex, antonyms_data)
+        try:
+            for i in range(0, self.max_results):
+                antonym = self.result_string(i, antonyms_list[i])
+                print(cs(antonym, self.color))
+        except IndexError:
+            pass
 
     def soup_to_list(self, soup_result):
         soup_list = []
