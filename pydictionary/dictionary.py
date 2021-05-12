@@ -4,6 +4,7 @@ from bs4 import BeautifulSoup as bs
 from stringcolor import *
 import re
 
+
 class Dictionary:
     def __init__(self, word, max_results=5):
         self.word = word
@@ -12,46 +13,73 @@ class Dictionary:
         self.thesaurus_url = "https://www.thesaurus.com/browse/" + str(self.word)
         self.meaning_soup = self.soup_result(self.meaning_url)
         self.thesaurus_soup = self.soup_result(self.thesaurus_url)
-        self.json_data = self.thesaurus_soup.find('script', text=re.compile("searchData"))
+        self.json_data = self.thesaurus_soup.find(
+            "script", text=re.compile("searchData")
+        )
         self.regex = re.compile(r"\"targetTerm\":\"([a-zA-Z0-9_ ]+)\"")
 
-    def meaning(self, color="white"):
-        self.color = color
+    def meanings(self):
         # for the meaning part
         meanings = self.meaning_soup.find_all("div", attrs={"value": True})
         print("\nMeaning of the word:")
         meaning_list = self.soup_to_list(meanings)
         try:
+            return meaning_list[: self.max_results]
+        except IndexError:
+            pass
+
+    def synonyms(self):
+        # for synonyms
+        print("\nSynonyms of the word:")
+        # synonyms_divs = self.soup.find_all("div", {"id": "synonyms"})
+        synonyms_data = str(self.json_data)[
+            str(self.json_data)
+            .find("searchData") : str(self.json_data)
+            .find('"antonyms"')
+        ]
+        synonyms_list = re.findall(self.regex, synonyms_data)
+        try:
+            return synonyms_list[: self.max_results]
+        except IndexError:
+            pass
+
+    def antonyms(self):
+        print("\nAntonyms of the word:")
+        # antonyms_divs = self.soup.find_all("div", {"id": "antonyms"})
+        antonyms_data = str(self.json_data)[str(self.json_data).find('"antonyms"') :]
+        antonyms_data = antonyms_data[: antonyms_data.find('"synonyms"')]
+        antonyms_list = re.findall(self.regex, antonyms_data)
+        try:
+            return antonyms_list[: self.max_results]
+        except IndexError:
+            pass
+
+    def print_meanings(self, color="white"):
+        meaning_term_list = self.meanings()
+        self.color = color
+        try:
             for i in range(0, self.max_results):
-                meaning = self.result_string(i, meaning_list[i])
+                meaning = self.result_string(i, meaning_term_list[i])
                 print(cs(meaning, self.color))
         except IndexError:
             pass
 
-    def synonyms(self, color="white"):
-        # for synonyms
+    def print_synonyms(self, color="white"):
+        synonyms_term_list = self.synonyms()
         self.color = color
-        print("\nsynonyms of the word:")
-        #synonyms_divs = self.soup.find_all("div", {"id": "synonyms"})
-        synonyms_data = str(self.json_data)[str(self.json_data).find("searchData"):str(self.json_data).find('"antonyms"')]
-        synonyms_list = re.findall(self.regex, synonyms_data)
         try:
             for i in range(0, self.max_results):
-                synonym = self.result_string(i, synonyms_list[i])
+                synonym = self.result_string(i, synonyms_term_list[i])
                 print(cs(synonym, self.color))
         except IndexError:
             pass
 
-    def antonyms(self, color="white"):
+    def print_antonyms(self, color="white"):
+        antonyms_term_list = self.antonyms()
         self.color = color
-        print("\nantonyms of the word:")
-        #antonyms_divs = self.soup.find_all("div", {"id": "antonyms"})
-        antonyms_data = str(self.json_data)[str(self.json_data).find('"antonyms"'):]
-        antonyms_data = antonyms_data[:antonyms_data.find('"synonyms"')]
-        antonyms_list = re.findall(self.regex, antonyms_data)
         try:
             for i in range(0, self.max_results):
-                antonym = self.result_string(i, antonyms_list[i])
+                antonym = self.result_string(i, antonyms_term_list[i])
                 print(cs(antonym, self.color))
         except IndexError:
             pass
@@ -68,8 +96,8 @@ class Dictionary:
         self.string = string
         result = f"{int(self.index)+ 1}. {str(self.string)}"
         return result
-    
-    def soup_result(self,url):
+
+    def soup_result(self, url):
         self.url = url
         self.response = requests.get(self.url).content
         self.soup = bs(self.response, "lxml")
