@@ -40,7 +40,7 @@ This will print maximum 5 results with text having white color
 
 If you want to increase  or decrease maximum results do this
 
-`dic = Dictionary("fix",10)`
+`dict = Dictionary("fix",10)`
 
 ### now maximum 10 results will be shown
 
