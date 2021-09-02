@@ -13,6 +13,11 @@ and scraps dictionary.com
 ```shell
 pip install Py-Dictionary
 ```
+to update it
+
+```shell
+pip install Py-Dictionary --upgrade
+```
 
 ## Use
 ```shell
