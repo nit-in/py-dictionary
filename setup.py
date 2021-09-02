@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="Py-Dictionary",
-    version="4.0.1",
+    version="4.1.0",
     author="nit-in",
     author_email="nit_in@live.com",
     description="Dictionary module",
@@ -19,7 +19,7 @@ setuptools.setup(
     ],
     install_requires=[
         "requests",
-        "bs4",
+        "beautifulsoup4",
         "string-color",
         "lxml",
     ],

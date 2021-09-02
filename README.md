@@ -25,7 +25,7 @@ dict = Dictionary("fix")
 
 ### To get the result as list do following (you can use them in your programs)
 ```shell
-meanings_list = dict.meaning()
+meanings_list = dict.meanings()
 
 synonyms_list = dict.synonyms()
 
@@ -53,7 +53,7 @@ dict = Dictionary("fix",10)
 
 ### To change the color of text
 ```shell
-dict.print_meaning("red")
+dict.print_meanings("red")
 
 dict.print_synonyms("green")
 
