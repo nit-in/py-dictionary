@@ -23,7 +23,7 @@ class Dictionary:
         meanings = self.meaning_soup.find_all("div", attrs={"value": True})
         meaning_list = self.soup_to_list(meanings)
         if self.isempty(meaning_list):
-            print(f"\nNo meaning of the word '{str(self.word)}' was not found on dictionary.com")
+            print(f"\nNo meaning of the word '{str(self.word)}' was found on dictionary.com")
         try:
             return meaning_list[: self.max_results]
         except IndexError:
@@ -39,7 +39,7 @@ class Dictionary:
         ]
         synonyms_list = re.findall(self.regex, synonyms_data)
         if self.isempty(synonyms_list):
-            print(f"\nNo synonym of the word '{str(self.word)}' was not found on dictionary.com")
+            print(f"\nNo synonym of the word '{str(self.word)}' was found on dictionary.com")
         try:
             return synonyms_list[: self.max_results]
         except IndexError:
@@ -51,7 +51,7 @@ class Dictionary:
         antonyms_data = antonyms_data[: antonyms_data.find('"synonyms"')]
         antonyms_list = re.findall(self.regex, antonyms_data)
         if self.isempty(antonyms_list):
-            print(f"\nNo antonym of the word '{str(self.word)}' was not found on dictionary.com")
+            print(f"\nNo antonym of the word '{str(self.word)}' was found on dictionary.com")
         try:
             return antonyms_list[: self.max_results]
         except IndexError:
