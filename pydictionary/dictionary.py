@@ -23,7 +23,7 @@ class Dictionary:
         meanings = self.meaning_soup.find_all("div", attrs={"value": True})
         meaning_list = self.soup_to_list(meanings)
         if self.isempty(meaning_list):
-            print("\nNo meaning of word was found on dictionary.com")
+            print(f"\nNo meaning of the word '{str(self.word)}' was found on dictionary.com")
         try:
             return meaning_list[: self.max_results]
         except IndexError:
@@ -39,7 +39,7 @@ class Dictionary:
         ]
         synonyms_list = re.findall(self.regex, synonyms_data)
         if self.isempty(synonyms_list):
-            print("\nNo synonym of word was found on dictionary.com")
+            print(f"\nNo synonym of the word '{str(self.word)}' was found on dictionary.com")
         try:
             return synonyms_list[: self.max_results]
         except IndexError:
@@ -51,7 +51,7 @@ class Dictionary:
         antonyms_data = antonyms_data[: antonyms_data.find('"synonyms"')]
         antonyms_list = re.findall(self.regex, antonyms_data)
         if self.isempty(antonyms_list):
-            print("\nNo antonym of word was found on dictionary.com")
+            print(f"\nNo antonym of the word '{str(self.word)}' was found on dictionary.com")
         try:
             return antonyms_list[: self.max_results]
         except IndexError:
@@ -61,7 +61,7 @@ class Dictionary:
         meaning_term_list = self.meanings()
         self.color = color
         if not self.isempty(meaning_term_list):
-            print("\nMeanings of the word:")
+            print(f"\nMeanings of the word '{str(self.word)}':")
         try:
             for i in range(0, self.max_results):
                 meaning = self.result_string(i, meaning_term_list[i])
@@ -73,7 +73,7 @@ class Dictionary:
         synonyms_term_list = self.synonyms()
         self.color = color
         if not self.isempty(synonyms_term_list):
-            print("\nSynonyms of the word:")
+            print(f"\nSynonyms of the word '{str(self.word)}':")
         try:
             for i in range(0, self.max_results):
                 synonym = self.result_string(i, synonyms_term_list[i])
@@ -85,7 +85,7 @@ class Dictionary:
         antonyms_term_list = self.antonyms()
         self.color = color
         if not self.isempty(antonyms_term_list):
-            print("\nAntonyms of the word:")
+            print(f"\nAntonyms of the word '{str(self.word)}':")
         try:
             for i in range(0, self.max_results):
                 antonym = self.result_string(i, antonyms_term_list[i])
